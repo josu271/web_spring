@@ -46,12 +46,6 @@ public class HomeController {
     }
 
 
-    // ---------- CALENDARIO ----------
-    @GetMapping("/calendario")
-    public String calendario() {
-        return "private/calendario";
-    }
-
     @GetMapping("/reporte")
     public String reporte() {
         return "private/reporte";

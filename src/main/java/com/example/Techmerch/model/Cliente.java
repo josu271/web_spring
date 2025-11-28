@@ -1,6 +1,7 @@
 package com.example.Techmerch.model;
 
 public class Cliente {
+
     private Integer dniCliente;
     private String nombre;
     private String apellido;
@@ -10,6 +11,7 @@ public class Cliente {
     private String status;
 
     public Cliente() {
+        // Constructor vacío
     }
 
     public Cliente(Integer dniCliente, String nombre, String apellido, String direccion,
