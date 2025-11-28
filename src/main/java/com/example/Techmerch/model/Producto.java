@@ -11,6 +11,7 @@ public class Producto {
     private BigDecimal precio;
     private Integer stock;
     private String status;
+    private Categoria categoria;
 
     public Producto() {
     }
@@ -90,5 +91,13 @@ public class Producto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
     }
 }

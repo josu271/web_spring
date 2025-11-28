@@ -29,22 +29,6 @@ public class HomeController {
 
     // --- PRIVADAS ---}
 
-    // ---------- PRODUCTOS ----------
-    @GetMapping("/articulo")
-    public String articulo() {
-        return "private/producto/articulo";
-    }
-
-    @GetMapping("/articulo/agregar")
-    public String articuloAgregar() {
-        return "private/producto/articuloagregar";
-    }
-
-    @GetMapping("/articulo/editar")
-    public String articuloEditar() {
-        return "private/producto/articuloeditar";
-    }
-
     // ---------- VENTAS ----------
     @GetMapping("/ventas")
     public String ventas() {
