@@ -22,21 +22,12 @@ public class HomeController {
         return "public/contacto";
     }
 
-    @GetMapping("/login")
-    public String login() {
-        return "public/login/login";
-    }
-
     @GetMapping("/serviciotecnico")
     public String servicioTecnico() {
         return "public/serviciotecnico";
     }
 
-    // --- PRIVADAS ---
-    @GetMapping("/panel")
-    public String panel() {
-        return "private/panel";
-    }
+    // --- PRIVADAS ---}
 
     // ---------- PRODUCTOS ----------
     @GetMapping("/articulo")

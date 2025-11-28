@@ -7,6 +7,7 @@ INSERT INTO Categorias (Nombre, Descripcion, Estado) VALUES
 ('Componentes', 'Piezas internas de PC', true),
 ('Servicios Técnicos', 'Reparaciones y mantenimiento', true);
 
+
 -- ======================================
 -- Producto
 -- ======================================
@@ -20,6 +21,7 @@ INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Tipo_Producto, Precio, 
 (4, 'Mantenimiento Preventivo', 'Limpieza y revisión general', 'Servicio', 120.00, 100),
 (4, 'Formateo e instalación de SO', 'Windows 11 o Linux', 'Servicio', 100.00, 100);
 
+
 -- ======================================
 -- Cliente
 -- ======================================
@@ -32,10 +34,10 @@ INSERT INTO Cliente (DNI_Cliente, Nombre, Apellido, Direccion, Correo, Celular) 
 -- ======================================
 -- Empleado
 -- ======================================
-INSERT INTO Empleado (DNI_Empleado, Nombre, Apellido, Direccion, Correo, Celular, Cargo) VALUES
-(47896325, 'Jorge', 'Mendoza', 'Av. Lima 789', 'jorge.mendoza@empresa.com', '999888777', 'Administrador'),
-(48965231, 'Luis', 'Cáceres', 'Jr. San Martín 123', 'luis.caceres@empresa.com', '988776655', 'Vendedor'),
-(50231478, 'María', 'Huamán', 'Calle Primavera 456', 'maria.huaman@empresa.com', '977665544', 'Técnico');
+INSERT INTO Empleado (DNI_Empleado, Nombre, Apellido, Direccion, Correo, Celular, Cargo,Contra) VALUES
+(47896325, 'Jorge', 'Mendoza', 'Av. Lima 789', 'jorge.mendoza@empresa.com', '999888777', 'Administrador', '123'),
+(48965231, 'Luis', 'Cáceres', 'Jr. San Martín 123', 'luis.caceres@empresa.com', '988776655', 'Vendedor', '123'),
+(50231478, 'María', 'Huamán', 'Calle Primavera 456', 'maria.huaman@empresa.com', '977665544', 'Técnico', '123');
 
 -- ======================================
 -- Ventas
