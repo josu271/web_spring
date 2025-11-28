@@ -13,10 +13,12 @@ public class CitaTecnica {
     private String status;
 
     public CitaTecnica() {
+        // Constructor vacío
     }
 
-    public CitaTecnica(Integer idCitaTecnica, Integer dniCliente, Integer dniEmpleado, String servicio,
-                       String estado, String descripcion, LocalDateTime fechaProgramada, String status) {
+    public CitaTecnica(Integer idCitaTecnica, Integer dniCliente, Integer dniEmpleado,
+                       String servicio, String estado, String descripcion,
+                       LocalDateTime fechaProgramada, String status) {
         this.idCitaTecnica = idCitaTecnica;
         this.dniCliente = dniCliente;
         this.dniEmpleado = dniEmpleado;

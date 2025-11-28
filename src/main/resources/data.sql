@@ -35,7 +35,7 @@ INSERT INTO Cliente (DNI_Cliente, Nombre, Apellido, Direccion, Correo, Celular) 
 -- Empleado
 -- ======================================
 INSERT INTO Empleado (DNI_Empleado, Nombre, Apellido, Direccion, Correo, Celular, Cargo,Contra) VALUES
-(47896325, 'Jorge', 'Mendoza', 'Av. Lima 789', 'jorge.mendoza@empresa.com', '999888777', 'Administrador', '123'),
+(75473846, 'Jorge', 'Mendoza', 'Av. Lima 789', 'jorge.mendoza@empresa.com', '999888777', 'Administrador', '123'),
 (48965231, 'Luis', 'Cáceres', 'Jr. San Martín 123', 'luis.caceres@empresa.com', '988776655', 'Vendedor', '123'),
 (50231478, 'María', 'Huamán', 'Calle Primavera 456', 'maria.huaman@empresa.com', '977665544', 'Técnico', '123');
 

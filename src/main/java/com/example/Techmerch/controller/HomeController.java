@@ -61,21 +61,6 @@ public class HomeController {
         return "private/venta/ventaseditar";
     }
 
-    // ---------- CITAS TÉCNICAS ----------
-    @GetMapping("/citastecnica")
-    public String citasTecnica() {
-        return "private/citas_tecnica/citastecnica";
-    }
-
-    @GetMapping("/citastecnica/agregar")
-    public String citasTecnicaAgregar() {
-        return "private/citas_tecnica/citastecnicaagregar";
-    }
-
-    @GetMapping("/citastecnica/editar")
-    public String citasTecnicaEditar() {
-        return "private/citas_tecnica/citastecnicaeditar";
-    }
 
     // ---------- CALENDARIO ----------
     @GetMapping("/calendario")
