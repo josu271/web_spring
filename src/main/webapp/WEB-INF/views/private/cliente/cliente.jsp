@@ -4,18 +4,28 @@
 <html>
 <head>
     <title>Clientes - Techmerch</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cliente.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 </head>
 <body>
-    <div class="container">
-        <h1><i class="bi bi-people"></i> Gestión de Clientes</h1>
 
-        <div class="header-actions">
-            <a href="${pageContext.request.contextPath}/clientes/crear" class="btn btn-primary">
+<div class="contenedor">
+    <%@ include file="../../layout/sidebar.jsp" %>
+
+    <div class="contenido">
+        <div class="header-section">
+            <h1><i class="bi bi-people"></i> Gestión de Clientes</h1>
+            <a href="${pageContext.request.contextPath}/clientes/crear" class="btn-add">
                 <i class="bi bi-plus-circle"></i> Nuevo Cliente
             </a>
         </div>
+
+        <c:if test="${not empty message}">
+            <div class="alert alert-success">
+                ${message}
+            </div>
+        </c:if>
 
         <div class="table-container">
             <table class="data-table">
@@ -44,7 +54,6 @@
                                 </span>
                             </td>
                             <td class="actions">
-
                                 <a href="${pageContext.request.contextPath}/clientes/editar?dni=${cliente.dniCliente}"
                                    class="btn btn-warning btn-sm" title="Editar">
                                     <i class="bi bi-pencil"></i>
@@ -68,9 +77,16 @@
                             </td>
                         </tr>
                     </c:forEach>
+                    <c:if test="${empty clientes}">
+                        <tr>
+                            <td colspan="7" class="no-data">No hay clientes registrados</td>
+                        </tr>
+                    </c:if>
                 </tbody>
             </table>
         </div>
     </div>
+</div>
+
 </body>
 </html>

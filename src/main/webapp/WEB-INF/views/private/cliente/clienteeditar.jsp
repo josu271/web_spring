@@ -4,12 +4,22 @@
 <html>
 <head>
     <title>Editar Cliente - Techmerch</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cliente.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 </head>
 <body>
-    <div class="container">
-        <h1><i class="bi bi-pencil"></i> Editar Cliente</h1>
+
+<div class="contenedor">
+    <%@ include file="../../layout/sidebar.jsp" %>
+
+    <div class="contenido">
+        <div class="header-section">
+            <h1><i class="bi bi-pencil"></i> Editar Cliente</h1>
+            <a href="${pageContext.request.contextPath}/clientes/list" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
 
         <form action="${pageContext.request.contextPath}/clientes/editar" method="post" class="form-container">
             <input type="hidden" name="dniCliente" value="${cliente.dniCliente}">
@@ -62,12 +72,13 @@
                 <button type="submit" class="btn btn-primary">
                     <i class="bi bi-check-circle"></i> Actualizar Cliente
                 </button>
-
                 <a href="${pageContext.request.contextPath}/clientes/list" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-x-circle"></i> Cancelar
                 </a>
             </div>
         </form>
     </div>
+</div>
+
 </body>
 </html>

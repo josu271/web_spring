@@ -3,43 +3,59 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Crear Cliente</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
+    <title>Crear Cliente - Techmerch</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/cliente.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
 </head>
 <body>
-    <div class="container">
-        <h1><i class="bi bi-person-plus"></i> Crear Nuevo Cliente</h1>
+
+<div class="contenedor">
+    <%@ include file="../../layout/sidebar.jsp" %>
+
+    <div class="contenido">
+        <div class="header-section">
+            <h1><i class="bi bi-person-plus"></i> Crear Nuevo Cliente</h1>
+            <a href="${pageContext.request.contextPath}/clientes/list" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Volver
+            </a>
+        </div>
 
         <form action="${pageContext.request.contextPath}/clientes/crear" method="post" class="form-container">
             <div class="form-group">
                 <label for="dniCliente">DNI:</label>
-                <input type="number" id="dniCliente" name="dniCliente" required class="form-control">
+                <input type="number" id="dniCliente" name="dniCliente" required class="form-control"
+                       placeholder="Ingrese el DNI">
             </div>
 
             <div class="form-group">
                 <label for="nombre">Nombre:</label>
-                <input type="text" id="nombre" name="nombre" required class="form-control">
+                <input type="text" id="nombre" name="nombre" required class="form-control"
+                       placeholder="Ingrese el nombre">
             </div>
 
             <div class="form-group">
                 <label for="apellido">Apellido:</label>
-                <input type="text" id="apellido" name="apellido" required class="form-control">
+                <input type="text" id="apellido" name="apellido" required class="form-control"
+                       placeholder="Ingrese el apellido">
             </div>
 
             <div class="form-group">
                 <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" class="form-control">
+                <input type="text" id="direccion" name="direccion" class="form-control"
+                       placeholder="Ingrese la dirección">
             </div>
 
             <div class="form-group">
-                <label for="correo">Correo:</label>
-                <input type="email" id="correo" name="correo" class="form-control">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" class="form-control"
+                       placeholder="Ingrese el correo electrónico">
             </div>
 
             <div class="form-group">
                 <label for="celular">Celular:</label>
-                <input type="text" id="celular" name="celular" class="form-control">
+                <input type="text" id="celular" name="celular" class="form-control"
+                       placeholder="Ingrese el número de celular">
             </div>
 
             <div class="form-actions">
@@ -47,10 +63,12 @@
                     <i class="bi bi-check-circle"></i> Crear Cliente
                 </button>
                 <a href="${pageContext.request.contextPath}/clientes/list" class="btn btn-secondary">
-                    <i class="bi bi-arrow-left"></i> Cancelar
+                    <i class="bi bi-x-circle"></i> Cancelar
                 </a>
             </div>
         </form>
     </div>
+</div>
+
 </body>
 </html>
