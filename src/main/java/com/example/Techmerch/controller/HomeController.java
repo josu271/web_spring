@@ -27,25 +27,6 @@ public class HomeController {
         return "public/serviciotecnico";
     }
 
-    // --- PRIVADAS ---}
-
-    // ---------- VENTAS ----------
-    @GetMapping("/ventas")
-    public String ventas() {
-        return "private/venta/ventas";
-    }
-
-    @GetMapping("/ventas/agregar")
-    public String ventasAgregar() {
-        return "private/venta/ventasagregar";
-    }
-
-    @GetMapping("/ventas/editar")
-    public String ventasEditar() {
-        return "private/venta/ventaseditar";
-    }
-
-
     @GetMapping("/reporte")
     public String reporte() {
         return "private/reporte";

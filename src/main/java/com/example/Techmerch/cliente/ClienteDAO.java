@@ -10,4 +10,5 @@ public interface ClienteDAO {
     public void crearCliente(Cliente cliente);
     public void actualizarCliente(Cliente cliente);
     public void cambiarEstadoCliente(Integer dni, String status);
+    public List<Cliente> buscarClientes(String busqueda);
 }

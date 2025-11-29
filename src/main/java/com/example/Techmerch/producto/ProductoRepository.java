@@ -76,4 +76,10 @@ public class ProductoRepository implements ProductoDAO {
         String sql = "UPDATE Producto SET Status = ? WHERE ID_Producto = ?";
         jdbcTemplate.update(sql, status, id);
     }
+    @Override
+    public List<Producto> buscarProductos(String busqueda) {
+        String sql = "SELECT * FROM Producto WHERE Nombre LIKE ? AND Status = 'ACTIVO' AND Stock > 0";
+        String likeBusqueda = "%" + busqueda + "%";
+        return jdbcTemplate.query(sql, productoRowMapper, likeBusqueda);
+    }
 }

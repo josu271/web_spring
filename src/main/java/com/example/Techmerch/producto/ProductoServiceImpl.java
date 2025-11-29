@@ -49,4 +49,8 @@ public class ProductoServiceImpl implements ProductoService {
     public void desactivarProducto(Integer id) {
         productoDAO.updateStatus(id, "INACTIVO");
     }
+    @Override
+    public List<Producto> buscarProductos(String busqueda) {
+        return productoDAO.buscarProductos(busqueda);
+    }
 }

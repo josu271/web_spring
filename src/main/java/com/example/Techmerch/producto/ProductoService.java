@@ -11,4 +11,5 @@ public interface ProductoService {
     void eliminarProducto(Integer id);
     void activarProducto(Integer id);
     void desactivarProducto(Integer id);
+    List<Producto> buscarProductos(String busqueda);
 }

@@ -36,4 +36,12 @@ public class ClienteServiceImpl implements ClienteService {
     public void activarCliente(Integer dni) {
         clienteDAO.cambiarEstadoCliente(dni, "ACTIVO");
     }
+    @Override
+    public List<Cliente> buscarClientes(String busqueda) {
+        System.out.println("Buscando clientes con: " + busqueda);
+        List<Cliente> resultados = clienteDAO.buscarClientes(busqueda);
+        System.out.println("Resultados encontrados: " + resultados.size());
+        return resultados;
+    }
+
 }

@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Venta {
-    private Integer idVentas;
+    private Integer idVenta;
     private Integer dniCliente;
     private Integer dniEmpleado;
     private LocalDateTime fechaVenta;
@@ -15,9 +15,9 @@ public class Venta {
     public Venta() {
     }
 
-    public Venta(Integer idVentas, Integer dniCliente, Integer dniEmpleado, LocalDateTime fechaVenta,
+    public Venta(Integer idVenta, Integer dniCliente, Integer dniEmpleado, LocalDateTime fechaVenta,
                  String metodoPago, BigDecimal total, String status) {
-        this.idVentas = idVentas;
+        this.idVenta = idVenta;
         this.dniCliente = dniCliente;
         this.dniEmpleado = dniEmpleado;
         this.fechaVenta = fechaVenta;
@@ -27,59 +27,24 @@ public class Venta {
     }
 
     // Getters y Setters
-    public Integer getIdVentas() {
-        return idVentas;
-    }
+    public Integer getIdVenta() { return idVenta; }
+    public void setIdVenta(Integer idVenta) { this.idVenta = idVenta; }
 
-    public void setIdVentas(Integer idVentas) {
-        this.idVentas = idVentas;
-    }
+    public Integer getDniCliente() { return dniCliente; }
+    public void setDniCliente(Integer dniCliente) { this.dniCliente = dniCliente; }
 
-    public Integer getDniCliente() {
-        return dniCliente;
-    }
+    public Integer getDniEmpleado() { return dniEmpleado; }
+    public void setDniEmpleado(Integer dniEmpleado) { this.dniEmpleado = dniEmpleado; }
 
-    public void setDniCliente(Integer dniCliente) {
-        this.dniCliente = dniCliente;
-    }
+    public LocalDateTime getFechaVenta() { return fechaVenta; }
+    public void setFechaVenta(LocalDateTime fechaVenta) { this.fechaVenta = fechaVenta; }
 
-    public Integer getDniEmpleado() {
-        return dniEmpleado;
-    }
+    public String getMetodoPago() { return metodoPago; }
+    public void setMetodoPago(String metodoPago) { this.metodoPago = metodoPago; }
 
-    public void setDniEmpleado(Integer dniEmpleado) {
-        this.dniEmpleado = dniEmpleado;
-    }
+    public BigDecimal getTotal() { return total; }
+    public void setTotal(BigDecimal total) { this.total = total; }
 
-    public LocalDateTime getFechaVenta() {
-        return fechaVenta;
-    }
-
-    public void setFechaVenta(LocalDateTime fechaVenta) {
-        this.fechaVenta = fechaVenta;
-    }
-
-    public String getMetodoPago() {
-        return metodoPago;
-    }
-
-    public void setMetodoPago(String metodoPago) {
-        this.metodoPago = metodoPago;
-    }
-
-    public BigDecimal getTotal() {
-        return total;
-    }
-
-    public void setTotal(BigDecimal total) {
-        this.total = total;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }

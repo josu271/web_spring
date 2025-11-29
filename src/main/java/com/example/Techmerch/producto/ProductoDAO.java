@@ -10,4 +10,5 @@ public interface ProductoDAO {
     void update(Producto producto);
     void deleteById(Integer id);
     void updateStatus(Integer id, String status);
+    List<Producto> buscarProductos(String busqueda);
 }

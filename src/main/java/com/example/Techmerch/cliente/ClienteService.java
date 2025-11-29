@@ -11,4 +11,6 @@ public interface ClienteService {
     public void actualizarCliente(Cliente cliente);
     public void desactivarCliente(Integer dni);
     public void activarCliente(Integer dni);
+    public List<Cliente> buscarClientes(String busqueda);
+
 }

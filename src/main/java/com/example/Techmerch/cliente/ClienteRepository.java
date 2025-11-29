@@ -67,8 +67,16 @@ public class ClienteRepository implements ClienteDAO {
                 cliente.getDniCliente());
     }
 
+
     public void cambiarEstadoCliente(Integer dni, String status) {
         String query = "UPDATE Cliente SET Status = ? WHERE DNI_Cliente = ?";
         jdbcTemplate.update(query, status, dni);
+    }
+    @Override
+    public List<Cliente> buscarClientes(String busqueda) {
+        String sql = "SELECT DNI_Cliente, Nombre, Apellido, Direccion, Correo, Celular, Status " +
+                "FROM Cliente WHERE (Nombre LIKE ? OR Apellido LIKE ?) AND Status = 'ACTIVO'";
+        String likeBusqueda = "%" + busqueda + "%";
+        return jdbcTemplate.query(sql, clienteRowMapper, likeBusqueda, likeBusqueda);
     }
 }
