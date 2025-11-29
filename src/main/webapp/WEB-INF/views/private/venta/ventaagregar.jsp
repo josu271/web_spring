@@ -199,8 +199,7 @@
                                                                class="form-control form-control-sm cantidad-input"
                                                                placeholder="0" min="0" max="${producto.stock}"
                                                                value="0" data-precio="${producto.precio}"
-                                                               data-producto-id="${producto.idProducto}"
-                                                               data-producto-nombre="${producto.nombre}">
+                                                               data-producto-id="${producto.idProducto}">
                                                     </td>
                                                     <td class="subtotal" id="subtotal_${producto.idProducto}">S/. 0.00</td>
                                                 </tr>
@@ -213,12 +212,6 @@
                                             </tr>
                                         </tfoot>
                                     </table>
-                                </div>
-
-                                <!-- Información de productos seleccionados -->
-                                <div id="productos-seleccionados" class="mt-3" style="display: none;">
-                                    <h6><i class="bi bi-list-check"></i> Productos en la venta:</h6>
-                                    <ul id="lista-productos" class="list-group"></ul>
                                 </div>
                             </c:when>
                             <c:otherwise>
@@ -303,21 +296,14 @@ function buscarProducto() {
 // Calcular total automáticamente
 document.addEventListener('DOMContentLoaded', function() {
     const cantidadInputs = document.querySelectorAll('.cantidad-input');
-    const productosSeleccionadosDiv = document.getElementById('productos-seleccionados');
-    const listaProductos = document.getElementById('lista-productos');
 
     function calcularTotal() {
         let total = 0;
-        let hayProductosSeleccionados = false;
-
-        // Limpiar lista
-        listaProductos.innerHTML = '';
 
         cantidadInputs.forEach(input => {
             const cantidad = parseInt(input.value) || 0;
             const precio = parseFloat(input.dataset.precio);
             const productoId = input.dataset.productoId;
-            const productoNombre = input.dataset.productoNombre;
             const subtotal = cantidad * precio;
 
             // Actualizar subtotal en la fila
@@ -327,28 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             total += subtotal;
-
-            // Agregar a lista de productos seleccionados
-            if (cantidad > 0) {
-                hayProductosSeleccionados = true;
-                const li = document.createElement('li');
-                li.className = 'list-group-item d-flex justify-content-between align-items-center';
-                li.innerHTML = `
-                    ${productoNombre}
-                    <span class="badge bg-primary rounded-pill">
-                        ${cantidad} x S/. ${precio.toFixed(2)} = S/. ${subtotal.toFixed(2)}
-                    </span>
-                `;
-                listaProductos.appendChild(li);
-            }
         });
-
-        // Mostrar/ocultar sección de productos seleccionados
-        if (hayProductosSeleccionados) {
-            productosSeleccionadosDiv.style.display = 'block';
-        } else {
-            productosSeleccionadosDiv.style.display = 'none';
-        }
 
         // Actualizar total general
         document.getElementById('total-venta').textContent = 'S/. ' + total.toFixed(2);
