@@ -18,7 +18,7 @@
   <nav>
     <a href="${pageContext.request.contextPath}/ventas/list"><i class="bi bi-cart"></i> Ventas</a>
     <a href="${pageContext.request.contextPath}/producto"><i class="bi bi-box-seam"></i> Productos</a>
-    <a href="${pageContext.request.contextPath}/reporte"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
+    <a href="${pageContext.request.contextPath}/reportes/dashboard"><i class="bi bi-file-earmark-bar-graph"></i> Reportes</a>
     <a href="${pageContext.request.contextPath}/citastecnica/list"><i class="bi bi-tools"></i> Citas Técnicas</a>
     <a href="${pageContext.request.contextPath}/clientes/list"><i class="bi bi-people"></i> Clientes</a>
   </nav>

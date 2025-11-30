@@ -27,8 +27,4 @@ public class HomeController {
         return "public/serviciotecnico";
     }
 
-    @GetMapping("/reporte")
-    public String reporte() {
-        return "private/reporte";
-    }
 }
