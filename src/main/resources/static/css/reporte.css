@@ -1,14 +1,12 @@
-/* Estilos para la página de reportes */
-body {
-    background-color: #f8f9fa;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
+/* dashboard.css - SIN reglas de sidebar */
 
+/* Solo contenido del dashboard */
 .content {
     background-color: #f8f9fa;
     min-height: 100vh;
 }
 
+/* Tarjetas */
 .card {
     border: none;
     border-radius: 10px;
@@ -17,7 +15,7 @@ body {
 
 .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-title {
@@ -26,74 +24,52 @@ body {
     font-size: 0.95rem;
 }
 
-.fs-4 {
-    font-weight: 700;
+/* Estadísticas */
+.stats-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 15px;
 }
 
-.text-primary {
-    color: #1e40af !important;
+.stats-card:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.text-success {
-    color: #16a34a !important;
+.stats-card:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.text-warning {
-    color: #f59e0b !important;
+.stats-card:nth-child(4) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
 }
 
-.text-info {
-    color: #0ea5e9 !important;
+.stats-card .card-body {
+    padding: 1.5rem;
+}
+
+.stats-card .fs-4 {
+    font-size: 2rem;
+    margin-bottom: 0;
 }
 
 /* Gráficos */
+.chart-container {
+    position: relative;
+    height: 300px;
+    width: 100%;
+}
+
 canvas {
     max-height: 300px;
 }
 
-/* Sidebar styling */
-.sidebar {
-    background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
-    min-height: 100vh;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.sidebar .nav-link {
-    color: #e2e8f0;
-    padding: 12px 20px;
-    margin: 4px 0;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.sidebar .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: #ffffff;
-}
-
-.sidebar .nav-link.active {
-    background-color: #3b82f6;
-    color: #ffffff;
-}
-
-/* Header */
+/* Título */
 h2 {
     color: #1e293b;
     font-weight: 700;
     border-bottom: 3px solid #3b82f6;
     padding-bottom: 10px;
     margin-bottom: 20px;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .card {
-        margin-bottom: 1rem;
-    }
-    
-    .content {
-        padding: 1rem !important;
-    }
 }
 
 /* Animaciones */
@@ -112,33 +88,13 @@ h2 {
     animation: fadeIn 0.5s ease-in-out;
 }
 
-/* Estadísticas rápidas */
-.stats-card {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border-radius: 15px;
-}
+/* Responsive */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 1rem;
+    }
 
-.stats-card:nth-child(2) {
-    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-}
-
-.stats-card:nth-child(3) {
-    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-}
-
-.stats-card .card-body {
-    padding: 1.5rem;
-}
-
-.stats-card .fs-4 {
-    font-size: 2rem !important;
-    margin-bottom: 0;
-}
-
-/* Mejoras para los gráficos */
-.chart-container {
-    position: relative;
-    height: 300px;
-    width: 100%;
+    .content {
+        padding: 1rem !important;
+    }
 }

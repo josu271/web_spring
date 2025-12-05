@@ -8,7 +8,7 @@
     <title>Dashboard - TiendaTech</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/reporte.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/reporte.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -50,34 +50,6 @@
                     <div class="card-body">
                         <h5 class="card-title">Promedio Venta</h5>
                         <p class="fs-4">$<fmt:formatNumber value="${promedioVenta != null ? promedioVenta : 0}" pattern="#,##0.00"/></p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Segunda fila de estadísticas -->
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-warning"><i class="bi bi-clock"></i> Citas Pendientes</h5>
-                        <p class="fs-4 text-warning">${citasPendientes != null ? citasPendientes : 0}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-info"><i class="bi bi-gear"></i> Citas en Progreso</h5>
-                        <p class="fs-4 text-info">${citasEnProgreso != null ? citasEnProgreso : 0}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card text-center shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title text-success"><i class="bi bi-check-circle"></i> Citas Completadas</h5>
-                        <p class="fs-4 text-success">${citasCompletadas != null ? citasCompletadas : 0}</p>
                     </div>
                 </div>
             </div>

@@ -1,49 +1,224 @@
+/* SIDEBAR MEJORADO CON CONTENIDO */
 html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .contenedor {
-  display: flex;
-  height: 100vh;
+    display: flex;
+    height: 100vh;
 }
 
+/* === SIDEBAR === */
 .sidebar {
-  width: 220px;
-  background: #1a1a2e;
-  color: #fff;
-  padding: 20px;
+    width: 250px;
+    background: #2c3e50;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 100;
 }
 
-.contenido {
-  flex: 1;
-  padding: 1rem 2rem;
-  background: #f4f6f9;
-}
-
+/* Logo */
 .sidebar .logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 1.3rem;
-  font-weight: bold;
-  margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 25px 20px;
+    background: #1a252f;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar .logo i {
+    font-size: 2rem;
+    color: #3498db;
+}
+
+.sidebar .logo-text {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Sección de usuario */
+.user-info {
+    padding: 20px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.user-avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.user-name {
+    font-weight: 600;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+}
+
+.user-role {
+    color: #bdc3c7;
+    font-size: 0.9rem;
+}
+
+/* Navegación */
+.sidebar nav {
+    flex: 1;
+    padding: 20px 0;
+    overflow-y: auto;
+}
+
+.sidebar nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar nav li {
+    margin-bottom: 5px;
+    padding: 0 15px;
 }
 
 .sidebar nav a {
-  display: block;
-  color: #ddd;
-  padding: 10px 0;
-  text-decoration: none;
-  transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ecf0f1;
+    padding: 14px 15px;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.sidebar nav a i {
+    font-size: 1.2rem;
+    width: 24px;
+    text-align: center;
+    color: #95a5a6;
 }
 
 .sidebar nav a:hover {
-  color: #fff;
-  background: #16213e;
-  padding-left: 8px;
-  border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(3px);
+    color: #ffffff;
 }
 
+.sidebar nav a:hover i {
+    color: #3498db;
+}
 
+.sidebar nav a.active {
+    background: #3498db;
+    color: white;
+}
 
+.sidebar nav a.active i {
+    color: white;
+}
+
+/* Footer del sidebar */
+.sidebar-footer {
+    padding: 15px 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: center;
+    font-size: 0.85rem;
+    color: #95a5a6;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* === CONTENIDO PRINCIPAL === */
+.contenido {
+    flex: 1;
+    padding: 30px;
+    background: #ecf0f1;
+    overflow-y: auto;
+}
+
+/* Indicador de carga */
+.loading-indicator {
+    display: none;
+}
+
+/* Cuando no hay contenido */
+.contenido:empty::before {
+    content: 'Selecciona una opción del menú';
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #7f8c8d;
+    font-size: 1.1rem;
+    font-style: italic;
+}
+
+/* Scrollbar */
+.sidebar nav::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar nav::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.sidebar nav::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+.sidebar nav::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 70px;
+    }
+
+    .sidebar .logo-text,
+    .user-name,
+    .user-role,
+    .sidebar nav a span,
+    .sidebar-footer span {
+        display: none;
+    }
+
+    .sidebar .logo {
+        justify-content: center;
+        padding: 20px 10px;
+    }
+
+    .user-info {
+        padding: 15px 10px;
+    }
+
+    .user-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+    }
+
+    .sidebar nav a {
+        justify-content: center;
+        padding: 15px;
+    }
+
+    .sidebar nav a:hover {
+        transform: translateY(-2px);
+    }
+}
