@@ -7,6 +7,8 @@ public interface VentaDAO {
     List<Venta> findAll();
     Venta findById(Integer id);
     void save(Venta venta);
+    Integer saveAndReturnId(Venta venta);
     void update(Venta venta);
     void delete(Integer id);
+
 }

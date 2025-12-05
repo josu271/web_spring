@@ -2,10 +2,12 @@ package com.example.Techmerch.controller;
 
 import com.example.Techmerch.model.Venta;
 import com.example.Techmerch.model.Producto;
+import com.example.Techmerch.model.DetalleVenta;
 import com.example.Techmerch.venta.VentaService;
 import com.example.Techmerch.empleado.EmpleadoService;
 import com.example.Techmerch.cliente.ClienteService;
 import com.example.Techmerch.producto.ProductoService;
+import com.example.Techmerch.venta.DetalleVentaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,13 +26,16 @@ public class VentaController {
     private final EmpleadoService empleadoService;
     private final ClienteService clienteService;
     private final ProductoService productoService;
+    private final DetalleVentaService detalleVentaService;
 
     public VentaController(VentaService ventaService, EmpleadoService empleadoService,
-                           ClienteService clienteService, ProductoService productoService) {
+                           ClienteService clienteService, ProductoService productoService,
+                           DetalleVentaService detalleVentaService) {
         this.ventaService = ventaService;
         this.empleadoService = empleadoService;
         this.clienteService = clienteService;
         this.productoService = productoService;
+        this.detalleVentaService = detalleVentaService;
     }
 
     @ModelAttribute("productosSeleccionados")
@@ -57,7 +62,6 @@ public class VentaController {
         model.addAttribute("clientes", clienteService.listaClientes());
         model.addAttribute("productos", productoService.obtenerTodosProductos());
 
-        // Inicializar atributos de sesión si no existen
         if (!model.containsAttribute("productosSeleccionados")) {
             model.addAttribute("productosSeleccionados", new HashMap<Integer, Producto>());
         }
@@ -87,13 +91,6 @@ public class VentaController {
             return "redirect:/ventas/agregar";
         }
 
-        if (cantidad > producto.getStock()) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Cantidad excede el stock disponible (" + producto.getStock() + ")");
-            return "redirect:/ventas/agregar";
-        }
-
-        // Agregar producto al carrito
         productosSeleccionados.put(productoId, producto);
         cantidades.put(productoId, cantidad);
 
@@ -145,8 +142,9 @@ public class VentaController {
                 return "redirect:/ventas/agregar";
             }
 
-            // Calcular total
+            // Calcular total y preparar detalles
             BigDecimal total = BigDecimal.ZERO;
+            List<DetalleVenta> detalles = new ArrayList<>();
 
             for (Map.Entry<Integer, Producto> entry : productosSeleccionados.entrySet()) {
                 Integer productoId = entry.getKey();
@@ -154,16 +152,19 @@ public class VentaController {
                 Integer cantidad = cantidades.get(productoId);
 
                 if (cantidad != null && cantidad > 0) {
-                    // Validar stock nuevamente
-                    if (cantidad > producto.getStock()) {
-                        redirectAttributes.addFlashAttribute("error",
-                                "La cantidad para " + producto.getNombre() + " excede el stock disponible (" + producto.getStock() + ")");
-                        return "redirect:/ventas/agregar";
-                    }
-
                     BigDecimal precio = producto.getPrecio();
                     BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(cantidad));
                     total = total.add(subtotal);
+
+                    // Crear detalle de venta
+                    DetalleVenta detalle = new DetalleVenta();
+                    detalle.setIdProducto(productoId);
+                    detalle.setCantidad(cantidad);
+                    detalle.setPrecioUnitario(precio);
+                    detalle.setSubtotal(subtotal);
+                    detalle.setStatus("ACTIVO");
+
+                    detalles.add(detalle);
                 }
             }
 
@@ -172,27 +173,60 @@ public class VentaController {
                 return "redirect:/ventas/agregar";
             }
 
-            // Guardar venta
+            // Configurar datos de la venta
             venta.setFechaVenta(LocalDateTime.now());
             venta.setTotal(total);
             venta.setStatus("COMPLETADA");
 
-            ventaService.save(venta);
-
-            // IMPORTANTE: Aquí deberías guardar los detalles de venta
-            // Necesitarás un DetalleVentaService
+            // Guardar venta con detalles
+            Integer idVenta = ventaService.saveWithDetails(venta, detalles);
 
             // Limpiar carrito después de guardar
             productosSeleccionados.clear();
             cantidades.clear();
 
-            redirectAttributes.addFlashAttribute("success", "Venta registrada exitosamente");
+            redirectAttributes.addFlashAttribute("success", "Venta #" + idVenta + " registrada exitosamente con " + detalles.size() + " producto(s)");
 
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Error al registrar la venta: " + e.getMessage());
+            e.printStackTrace();
         }
 
         return "redirect:/ventas/list";
+    }
+
+    @GetMapping("/detalle/{id}")
+    public String mostrarDetalleVenta(@PathVariable Integer id, Model model) {
+        try {
+            Venta venta = ventaService.findById(id);
+            if (venta == null) {
+                return "redirect:/ventas/list";
+            }
+
+            List<DetalleVenta> detalles = detalleVentaService.findByVentaId(id);
+
+            // Obtener información de productos para cada detalle
+            List<Map<String, Object>> detallesCompletos = new ArrayList<>();
+            for (DetalleVenta detalle : detalles) {
+                Producto producto = productoService.obtenerProductoPorId(detalle.getIdProducto());
+
+                Map<String, Object> detalleCompleto = new HashMap<>();
+                detalleCompleto.put("detalle", detalle);
+                detalleCompleto.put("producto", producto);
+
+                detallesCompletos.add(detalleCompleto);
+            }
+
+            model.addAttribute("venta", venta);
+            model.addAttribute("detallesCompletos", detallesCompletos);
+            model.addAttribute("totalProductos", detalles.size());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "redirect:/ventas/list";
+        }
+
+        return "private/venta/detalle";
     }
 
     @GetMapping("/limpiar-carrito")
