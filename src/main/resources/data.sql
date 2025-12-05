@@ -1,5 +1,5 @@
 -- ======================================
--- Categorias
+-- INSERT: CATEGORIAS
 -- ======================================
 INSERT INTO Categorias (Nombre, Descripcion, Estado) VALUES
 ('Laptops', 'Portátiles de diversas marcas', true),
@@ -7,59 +7,88 @@ INSERT INTO Categorias (Nombre, Descripcion, Estado) VALUES
 ('Componentes', 'Piezas internas de PC', true),
 ('Servicios Técnicos', 'Reparaciones y mantenimiento', true);
 
+-- ======================================
+-- INSERT: PRODUCTO (SIN STOCK)
+-- ======================================
+INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Tipo_Producto, Precio) VALUES
+(1, 'Laptop HP Pavilion', 'Laptop 15.6” i5 16GB RAM', 'Laptop', 3200.00),
+(1, 'Laptop Lenovo IdeaPad 3', 'Laptop Ryzen 5 8GB RAM', 'Laptop', 2800.00),
+(2, 'Mouse Logitech M170', 'Mouse inalámbrico USB', 'Accesorio', 60.00),
+(2, 'Teclado Redragon Kumara', 'Teclado mecánico gamer', 'Accesorio', 180.00),
+(3, 'SSD Kingston 480GB', 'Unidad de estado sólido', 'Componente', 230.00),
+(3, 'Memoria RAM 8GB DDR4', 'Memoria para laptops y PCs', 'Componente', 150.00),
+(4, 'Mantenimiento Preventivo', 'Limpieza y revisión general', 'Servicio', 120.00),
+(4, 'Formateo e instalación de SO', 'Windows 11 o Linux', 'Servicio', 100.00);
 
 -- ======================================
--- Producto
--- ======================================
-INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Tipo_Producto, Precio, Stock) VALUES
-(1, 'Laptop HP Pavilion', 'Laptop 15.6” i5 16GB RAM', 'Laptop', 3200.00, 10),
-(1, 'Laptop Lenovo IdeaPad 3', 'Laptop Ryzen 5 8GB RAM', 'Laptop', 2800.00, 8),
-(2, 'Mouse Logitech M170', 'Mouse inalámbrico USB', 'Accesorio', 60.00, 50),
-(2, 'Teclado Redragon Kumara', 'Teclado mecánico gamer', 'Accesorio', 180.00, 20),
-(3, 'SSD Kingston 480GB', 'Unidad de estado sólido', 'Componente', 230.00, 25),
-(3, 'Memoria RAM 8GB DDR4', 'Memoria para laptops y PCs', 'Componente', 150.00, 40),
-(4, 'Mantenimiento Preventivo', 'Limpieza y revisión general', 'Servicio', 120.00, 100),
-(4, 'Formateo e instalación de SO', 'Windows 11 o Linux', 'Servicio', 100.00, 100);
-
-
--- ======================================
--- Cliente
+-- INSERT: CLIENTES
 -- ======================================
 INSERT INTO Cliente (DNI_Cliente, Nombre, Apellido, Direccion, Correo, Celular) VALUES
 (78945612, 'Carlos', 'Rojas', 'Av. Los Jardines 234', 'carlosr@gmail.com', '987654321'),
 (70321458, 'Lucía', 'Torres', 'Calle Central 102', 'luciat@gmail.com', '923456789'),
 (75632147, 'Miguel', 'Ramírez', 'Av. Industrial 589', 'miguelr@hotmail.com', '912345678'),
-(71258963, 'Ana', 'Sánchez', 'Jr. Grau 456', 'anas@gmail.com', '987321654');
+(71258963, 'Ana', 'Sánchez', 'Jr. Grau 456', 'anas@gmail.com', '987321654'),
+(70451236, 'Pedro', 'Castro', 'Av. Los Pinos 789', 'pedrocastro@gmail.com', '945612378'),
+(78541236, 'Marina', 'Vega', 'Calle Sol 234', 'marinavega@gmail.com', '987654987');
 
 -- ======================================
--- Empleado
+-- INSERT: EMPLEADOS
 -- ======================================
-INSERT INTO Empleado (DNI_Empleado, Nombre, Apellido, Direccion, Correo, Celular, Cargo,Contra) VALUES
+INSERT INTO Empleado (DNI_Empleado, Nombre, Apellido, Direccion, Correo, Celular, Cargo, Contra) VALUES
 (75473846, 'Jorge', 'Mendoza', 'Av. Lima 789', 'jorge.mendoza@empresa.com', '999888777', 'Administrador', '123'),
 (48965231, 'Luis', 'Cáceres', 'Jr. San Martín 123', 'luis.caceres@empresa.com', '988776655', 'Vendedor', '123'),
 (50231478, 'María', 'Huamán', 'Calle Primavera 456', 'maria.huaman@empresa.com', '977665544', 'Técnico', '123');
 
 -- ======================================
--- Ventas
+-- INSERT: VENTAS (8 ventas entre 1-5 diciembre 2025)
 -- ======================================
-INSERT INTO Ventas (DNI_Cliente, DNI_Empleado, Metodo_Pago, Total) VALUES
-(78945612, 48965231, 'Tarjeta', 3380.00),
-(70321458, 48965231, 'Efectivo', 2430.00),
-(75632147, 48965231, 'Yape', 2800.00);
+INSERT INTO Ventas (DNI_Cliente, DNI_Empleado, Fecha_Venta, Metodo_Pago, Total) VALUES
+(78945612, 48965231, '2025-12-01 10:30:00', 'Tarjeta', 3380.00),
+(70321458, 48965231, '2025-12-01 16:10:00', 'Efectivo', 480.00),
+(75632147, 48965231, '2025-12-02 14:45:00', 'Yape', 2800.00),
+(71258963, 48965231, '2025-12-03 12:20:00', 'Plin', 320.00),
+(70451236, 48965231, '2025-12-03 18:55:00', 'Tarjeta', 3380.00),
+(78541236, 48965231, '2025-12-04 11:40:00', 'Efectivo', 230.00),
+(78945612, 48965231, '2025-12-04 17:00:00', 'Yape', 180.00),
+(70321458, 48965231, '2025-12-05 19:30:00', 'Tarjeta', 2960.00);
 
 -- ======================================
--- DetalleVenta
+-- INSERT: DETALLE VENTA
 -- ======================================
 INSERT INTO DetalleVenta (ID_Producto, ID_Ventas, Cantidad, Precio_Unitario, Subtotal) VALUES
+-- Venta 1
 (1, 1, 1, 3200.00, 3200.00),
 (3, 1, 3, 60.00, 180.00),
+
+-- Venta 2
 (5, 2, 1, 230.00, 230.00),
 (6, 2, 1, 150.00, 150.00),
-(8, 2, 1, 100.00, 100.00),
-(2, 3, 1, 2800.00, 2800.00);
+(3, 2, 1, 100.00, 100.00),
+
+-- Venta 3
+(2, 3, 1, 2800.00, 2800.00),
+
+-- Venta 4
+(3, 4, 1, 230.00, 230.00),
+(7, 4, 1, 120.00, 120.00),
+
+-- Venta 5
+(1, 5, 1, 3200.00, 3200.00),
+(3, 5, 3, 60.00, 180.00),
+
+-- Venta 6
+(5, 6, 1, 230.00, 230.00),
+
+-- Venta 7
+(3, 7, 3, 60.00, 180.00),
+
+-- Venta 8
+(6, 8, 1, 150.00, 150.00),
+(2, 8, 1, 2800.00, 2800.00),
+(7, 8, 1, 120.00, 120.00);
 
 -- ======================================
--- Cita_Tecnica
+-- INSERT: CITA TÉCNICA
 -- ======================================
 INSERT INTO Cita_Tecnica (DNI_Cliente, DNI_Empleado, Servicio, Estado, Descripcion, Fecha_Programada) VALUES
 (78945612, 50231478, 'Mantenimiento Preventivo', 'Pendiente', 'Cliente solicita limpieza y revisión del equipo HP', '2025-11-03 10:00:00'),

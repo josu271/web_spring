@@ -55,18 +55,10 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="precio">Precio (S/.): *</label>
-                        <input type="number" id="precio" name="precio" value="${producto.precio}"
-                               step="0.01" min="0" required class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="stock">Stock: *</label>
-                        <input type="number" id="stock" name="stock" value="${producto.stock}"
-                               min="0" required class="form-control">
-                    </div>
+                <div class="form-group">
+                    <label for="precio">Precio (S/.): *</label>
+                    <input type="number" id="precio" name="precio" value="${producto.precio}"
+                           step="0.01" min="0" required class="form-control">
                 </div>
 
                 <div class="form-group">

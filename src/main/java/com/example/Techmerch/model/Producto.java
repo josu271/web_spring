@@ -9,7 +9,6 @@ public class Producto {
     private String descripcion;
     private String tipoProducto;
     private BigDecimal precio;
-    private Integer stock;
     private String status;
     private Categoria categoria;
 
@@ -17,14 +16,13 @@ public class Producto {
     }
 
     public Producto(Integer idProducto, Integer idCategoria, String nombre, String descripcion,
-                    String tipoProducto, BigDecimal precio, Integer stock, String status) {
+                    String tipoProducto, BigDecimal precio, String status) { // Eliminar stock del constructor
         this.idProducto = idProducto;
         this.idCategoria = idCategoria;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.tipoProducto = tipoProducto;
         this.precio = precio;
-        this.stock = stock;
         this.status = status;
     }
 
@@ -77,6 +75,8 @@ public class Producto {
         this.precio = precio;
     }
 
+    // Eliminar getter y setter de stock
+    /*
     public Integer getStock() {
         return stock;
     }
@@ -84,6 +84,7 @@ public class Producto {
     public void setStock(Integer stock) {
         this.stock = stock;
     }
+    */
 
     public String getStatus() {
         return status;

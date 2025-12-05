@@ -36,7 +36,7 @@
                         <th>Descripción</th>
                         <th>Tipo</th>
                         <th>Precio</th>
-                        <th>Stock</th>
+                        <!-- Eliminar columna Stock -->
                         <th>Estado</th>
                         <th>Acciones</th>
                     </tr>
@@ -49,7 +49,7 @@
                             <td>${producto.descripcion}</td>
                             <td>${producto.tipoProducto}</td>
                             <td>S/. ${producto.precio}</td>
-                            <td>${producto.stock}</td>
+                            <!-- Eliminar celda de stock -->
                             <td>
                                 <span class="status-badge status-${producto.status}">
                                     ${producto.status}
@@ -84,7 +84,7 @@
                     </c:forEach>
                     <c:if test="${empty productos}">
                         <tr>
-                            <td colspan="8" class="no-data">No hay productos registrados</td>
+                            <td colspan="7" class="no-data">No hay productos registrados</td> <!-- Cambiar de 8 a 7 -->
                         </tr>
                     </c:if>
                 </tbody>

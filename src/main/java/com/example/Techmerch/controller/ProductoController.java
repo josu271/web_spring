@@ -29,10 +29,6 @@ public class ProductoController {
     @GetMapping("/agregar")
     public String mostrarFormularioAgregar(Model model) {
         model.addAttribute("producto", new Producto());
-
-        // Datos de ejemplo para categorías (deberías crear un servicio para categorías)
-        // model.addAttribute("categorias", categoriaService.obtenerTodasCategorias());
-
         return "private/producto/articuloagregar";
     }
 
@@ -42,9 +38,7 @@ public class ProductoController {
         if (producto.getPrecio() == null) {
             producto.setPrecio(BigDecimal.ZERO);
         }
-        if (producto.getStock() == null) {
-            producto.setStock(0);
-        }
+        // Eliminar validación de stock
 
         productoService.crearProducto(producto);
         return "redirect:/producto";
@@ -57,9 +51,6 @@ public class ProductoController {
             return "redirect:/producto";
         }
         model.addAttribute("producto", producto);
-
-        // model.addAttribute("categorias", categoriaService.obtenerTodasCategorias());
-
         return "private/producto/articuloeditar";
     }
 

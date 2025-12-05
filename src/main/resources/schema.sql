@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS Categorias (
 );
 
 -- ======================================
--- TABLA: Producto
+-- TABLA: Producto (Stock eliminado)
 -- ======================================
 CREATE TABLE IF NOT EXISTS Producto (
     ID_Producto INT PRIMARY KEY AUTO_INCREMENT,
@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS Producto (
     Descripcion VARCHAR(100),
     Tipo_Producto VARCHAR(50),
     Precio DECIMAL(10,2) NOT NULL,
-    Stock INT NOT NULL,
     Status VARCHAR(20) DEFAULT 'ACTIVO',
     CONSTRAINT FK_Producto_Categoria FOREIGN KEY (ID_Categoria)
         REFERENCES Categorias(ID_Categoria)
@@ -49,7 +48,7 @@ CREATE TABLE IF NOT EXISTS Empleado (
     Correo VARCHAR(50),
     Celular VARCHAR(20),
     Cargo VARCHAR(20),
-    Contra VARCHAR(100)NOT NULL,
+    Contra VARCHAR(100) NOT NULL,
     Status VARCHAR(20) DEFAULT 'ACTIVO'
 );
 
@@ -60,10 +59,10 @@ CREATE TABLE IF NOT EXISTS Ventas (
     ID_Ventas INT PRIMARY KEY AUTO_INCREMENT,
     DNI_Cliente INT NOT NULL,
     DNI_Empleado INT NOT NULL,
-    Fecha_Venta TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    Fecha_Venta TIMESTAMP,
     Metodo_Pago VARCHAR(20),
     Total DECIMAL(10,2) NOT NULL,
-    Status VARCHAR(20) DEFAULT 'COMPLETADA', -- COMPLETADA / ANULADA
+    Status VARCHAR(20) DEFAULT 'COMPLETADA',
     CONSTRAINT FK_Ventas_Cliente FOREIGN KEY (DNI_Cliente)
         REFERENCES Cliente(DNI_Cliente),
     CONSTRAINT FK_Ventas_Empleado FOREIGN KEY (DNI_Empleado)
@@ -95,10 +94,10 @@ CREATE TABLE IF NOT EXISTS Cita_Tecnica (
     DNI_Cliente INT NOT NULL,
     DNI_Empleado INT NOT NULL,
     Servicio VARCHAR(50),
-    Estado VARCHAR(15), -- Pendiente, Atendida, Cancelada
+    Estado VARCHAR(15),
     Descripcion VARCHAR(150),
     Fecha_Programada TIMESTAMP,
-    Status VARCHAR(20) DEFAULT 'ACTIVO', -- soft delete
+    Status VARCHAR(20) DEFAULT 'ACTIVO',
     CONSTRAINT FK_Cita_Cliente FOREIGN KEY (DNI_Cliente)
         REFERENCES Cliente(DNI_Cliente),
     CONSTRAINT FK_Cita_Empleado FOREIGN KEY (DNI_Empleado)

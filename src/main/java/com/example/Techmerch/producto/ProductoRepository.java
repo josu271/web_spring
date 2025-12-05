@@ -26,7 +26,8 @@ public class ProductoRepository implements ProductoDAO {
         producto.setDescripcion(rs.getString("Descripcion"));
         producto.setTipoProducto(rs.getString("Tipo_Producto"));
         producto.setPrecio(rs.getBigDecimal("Precio"));
-        producto.setStock(rs.getInt("Stock"));
+        // Eliminar la línea que obtiene stock
+        // producto.setStock(rs.getInt("Stock"));
         producto.setStatus(rs.getString("Status"));
         return producto;
     };
@@ -48,20 +49,20 @@ public class ProductoRepository implements ProductoDAO {
 
     @Override
     public void save(Producto producto) {
-        String sql = "INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Tipo_Producto, Precio, Stock, Status) " +
-                "VALUES (?, ?, ?, ?, ?, ?, 'ACTIVO')";
+        String sql = "INSERT INTO Producto (ID_Categoria, Nombre, Descripcion, Tipo_Producto, Precio, Status) " + // Eliminar Stock
+                "VALUES (?, ?, ?, ?, ?, 'ACTIVO')";
         jdbcTemplate.update(sql, producto.getIdCategoria(), producto.getNombre(),
                 producto.getDescripcion(), producto.getTipoProducto(),
-                producto.getPrecio(), producto.getStock());
+                producto.getPrecio()); // Eliminar producto.getStock()
     }
 
     @Override
     public void update(Producto producto) {
         String sql = "UPDATE Producto SET ID_Categoria = ?, Nombre = ?, Descripcion = ?, " +
-                "Tipo_Producto = ?, Precio = ?, Stock = ?, Status = ? WHERE ID_Producto = ?";
+                "Tipo_Producto = ?, Precio = ?, Status = ? WHERE ID_Producto = ?"; // Eliminar Stock
         jdbcTemplate.update(sql, producto.getIdCategoria(), producto.getNombre(),
                 producto.getDescripcion(), producto.getTipoProducto(),
-                producto.getPrecio(), producto.getStock(), producto.getStatus(),
+                producto.getPrecio(), producto.getStatus(), // Eliminar producto.getStock()
                 producto.getIdProducto());
     }
 
@@ -76,9 +77,10 @@ public class ProductoRepository implements ProductoDAO {
         String sql = "UPDATE Producto SET Status = ? WHERE ID_Producto = ?";
         jdbcTemplate.update(sql, status, id);
     }
+
     @Override
     public List<Producto> buscarProductos(String busqueda) {
-        String sql = "SELECT * FROM Producto WHERE Nombre LIKE ? AND Status = 'ACTIVO' AND Stock > 0";
+        String sql = "SELECT * FROM Producto WHERE Nombre LIKE ? AND Status = 'ACTIVO'"; // Eliminar AND Stock > 0
         String likeBusqueda = "%" + busqueda + "%";
         return jdbcTemplate.query(sql, productoRowMapper, likeBusqueda);
     }

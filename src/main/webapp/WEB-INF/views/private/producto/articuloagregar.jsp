@@ -39,7 +39,6 @@
                         <label for="idCategoria">Categoría: *</label>
                         <select id="idCategoria" name="idCategoria" required class="form-control">
                             <option value="">Seleccionar categoría</option>
-                            <!-- Ejemplo de categorías - deberías cargarlas desde la base de datos -->
                             <option value="1">Computadoras</option>
                             <option value="2">Laptops</option>
                             <option value="3">Componentes</option>
@@ -55,19 +54,20 @@
                     </div>
                 </div>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="precio">Precio (S/.): *</label>
-                        <input type="number" id="precio" name="precio" step="0.01" min="0"
-                               required class="form-control" placeholder="0.00">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="stock">Stock: *</label>
-                        <input type="number" id="stock" name="stock" min="0" required
-                               class="form-control" placeholder="0">
-                    </div>
+                <div class="form-group"> <!-- Cambiar de form-row a form-group simple -->
+                    <label for="precio">Precio (S/.): *</label>
+                    <input type="number" id="precio" name="precio" step="0.01" min="0"
+                           required class="form-control" placeholder="0.00">
                 </div>
+
+                <!-- Eliminar campo Stock -->
+                <!--
+                <div class="form-group">
+                    <label for="stock">Stock: *</label>
+                    <input type="number" id="stock" name="stock" min="0" required
+                           class="form-control" placeholder="0">
+                </div>
+                -->
 
                 <div class="form-actions">
                     <button type="submit" class="btn-submit">
