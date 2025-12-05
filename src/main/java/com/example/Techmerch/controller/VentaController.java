@@ -1,21 +1,23 @@
 package com.example.Techmerch.controller;
 
 import com.example.Techmerch.model.Venta;
+import com.example.Techmerch.model.Producto;
 import com.example.Techmerch.venta.VentaService;
 import com.example.Techmerch.empleado.EmpleadoService;
 import com.example.Techmerch.cliente.ClienteService;
 import com.example.Techmerch.producto.ProductoService;
-import com.example.Techmerch.model.Cliente;
-import com.example.Techmerch.model.Producto;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Controller
 @RequestMapping("/ventas")
+@SessionAttributes({"productosSeleccionados", "cantidades"})
 public class VentaController {
 
     private final VentaService ventaService;
@@ -31,6 +33,16 @@ public class VentaController {
         this.productoService = productoService;
     }
 
+    @ModelAttribute("productosSeleccionados")
+    public Map<Integer, Producto> productosSeleccionados() {
+        return new HashMap<>();
+    }
+
+    @ModelAttribute("cantidades")
+    public Map<Integer, Integer> cantidades() {
+        return new HashMap<>();
+    }
+
     @GetMapping({"", "/", "/list"})
     public String listarVentas(Model model) {
         List<Venta> ventas = ventaService.findAll();
@@ -38,111 +50,162 @@ public class VentaController {
         return "private/venta/venta";
     }
 
-    // Método GET corregido para aceptar parámetros de búsqueda
     @GetMapping("/agregar")
-    public String mostrarFormularioAgregar(
-            @RequestParam(required = false) String busquedaCliente,
-            @RequestParam(required = false) String busquedaProducto,
-            Model model) {
-
+    public String mostrarFormularioAgregar(Model model) {
         model.addAttribute("venta", new Venta());
         model.addAttribute("empleados", empleadoService.findAll());
+        model.addAttribute("clientes", clienteService.listaClientes());
+        model.addAttribute("productos", productoService.obtenerTodosProductos());
 
-        // Manejar búsqueda de clientes
-        if (busquedaCliente != null && !busquedaCliente.trim().isEmpty()) {
-            List<Cliente> clientesEncontrados = clienteService.buscarClientes(busquedaCliente);
-            model.addAttribute("clientesEncontrados", clientesEncontrados);
-            model.addAttribute("busquedaCliente", busquedaCliente);
-        } else {
-            // Si no hay búsqueda, cargar todos los clientes
-            model.addAttribute("clientes", clienteService.listaClientes());
+        // Inicializar atributos de sesión si no existen
+        if (!model.containsAttribute("productosSeleccionados")) {
+            model.addAttribute("productosSeleccionados", new HashMap<Integer, Producto>());
         }
-
-        // Manejar búsqueda de productos
-        if (busquedaProducto != null && !busquedaProducto.trim().isEmpty()) {
-            List<Producto> productosEncontrados = productoService.buscarProductos(busquedaProducto);
-            model.addAttribute("productosEncontrados", productosEncontrados);
-            model.addAttribute("busquedaProducto", busquedaProducto);
-        } else {
-            // Si no hay búsqueda, cargar todos los productos
-            model.addAttribute("productos", productoService.obtenerTodosProductos());
+        if (!model.containsAttribute("cantidades")) {
+            model.addAttribute("cantidades", new HashMap<Integer, Integer>());
         }
 
         return "private/venta/ventaagregar";
     }
 
-    // Mantener los métodos POST de búsqueda por compatibilidad
-    @PostMapping("/buscar-cliente")
-    public String buscarCliente(@RequestParam String busquedaCliente,
-                                @RequestParam(required = false) String busquedaProducto,
-                                Model model) {
-        // Redirigir al método GET con parámetros
-        String redirectUrl = "/ventas/agregar?busquedaCliente=" + busquedaCliente;
-        if (busquedaProducto != null && !busquedaProducto.trim().isEmpty()) {
-            redirectUrl += "&busquedaProducto=" + busquedaProducto;
+    @PostMapping("/agregar-producto")
+    public String agregarProductoAVenta(
+            @RequestParam("productoId") Integer productoId,
+            @RequestParam("cantidad") Integer cantidad,
+            @ModelAttribute("productosSeleccionados") Map<Integer, Producto> productosSeleccionados,
+            @ModelAttribute("cantidades") Map<Integer, Integer> cantidades,
+            RedirectAttributes redirectAttributes) {
+
+        if (productoId == null || cantidad == null || cantidad <= 0) {
+            redirectAttributes.addFlashAttribute("error", "Debe seleccionar un producto y una cantidad válida");
+            return "redirect:/ventas/agregar";
         }
-        return "redirect:" + redirectUrl;
+
+        Producto producto = productoService.obtenerProductoPorId(productoId);
+        if (producto == null) {
+            redirectAttributes.addFlashAttribute("error", "Producto no encontrado");
+            return "redirect:/ventas/agregar";
+        }
+
+        if (cantidad > producto.getStock()) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Cantidad excede el stock disponible (" + producto.getStock() + ")");
+            return "redirect:/ventas/agregar";
+        }
+
+        // Agregar producto al carrito
+        productosSeleccionados.put(productoId, producto);
+        cantidades.put(productoId, cantidad);
+
+        redirectAttributes.addFlashAttribute("success", "Producto agregado: " + producto.getNombre());
+        return "redirect:/ventas/agregar";
     }
 
-    @PostMapping("/buscar-producto")
-    public String buscarProducto(@RequestParam String busquedaProducto,
-                                 @RequestParam(required = false) String busquedaCliente,
-                                 Model model) {
-        // Redirigir al método GET con parámetros
-        String redirectUrl = "/ventas/agregar?busquedaProducto=" + busquedaProducto;
-        if (busquedaCliente != null && !busquedaCliente.trim().isEmpty()) {
-            redirectUrl += "&busquedaCliente=" + busquedaCliente;
-        }
-        return "redirect:" + redirectUrl;
+    @PostMapping("/remover-producto")
+    public String removerProducto(
+            @RequestParam("productoId") Integer productoId,
+            @ModelAttribute("productosSeleccionados") Map<Integer, Producto> productosSeleccionados,
+            @ModelAttribute("cantidades") Map<Integer, Integer> cantidades,
+            RedirectAttributes redirectAttributes) {
+
+        productosSeleccionados.remove(productoId);
+        cantidades.remove(productoId);
+
+        redirectAttributes.addFlashAttribute("success", "Producto removido");
+        return "redirect:/ventas/agregar";
     }
 
     @PostMapping("/agregar")
-    public String agregarVenta(@ModelAttribute Venta venta,
-                               @RequestParam Map<String, String> allParams,
-                               @RequestParam(required = false) String busquedaCliente,
-                               @RequestParam(required = false) String busquedaProducto,
-                               Model model) {
+    public String agregarVenta(
+            @ModelAttribute Venta venta,
+            @ModelAttribute("productosSeleccionados") Map<Integer, Producto> productosSeleccionados,
+            @ModelAttribute("cantidades") Map<Integer, Integer> cantidades,
+            RedirectAttributes redirectAttributes) {
 
-        // Validar que se haya seleccionado un cliente
-        if (venta.getDniCliente() == null) {
-            model.addAttribute("error", "Debe seleccionar un cliente");
-            return mostrarFormularioAgregar(busquedaCliente, busquedaProducto, model);
-        }
+        try {
+            // Validaciones básicas
+            if (venta.getDniCliente() == null) {
+                redirectAttributes.addFlashAttribute("error", "Debe seleccionar un cliente");
+                return "redirect:/ventas/agregar";
+            }
 
-        // Procesar productos seleccionados y calcular total
-        double totalCalculado = 0.0;
-        boolean productosSeleccionados = false;
+            if (venta.getDniEmpleado() == null) {
+                redirectAttributes.addFlashAttribute("error", "Debe seleccionar un empleado");
+                return "redirect:/ventas/agregar";
+            }
 
-        for (Map.Entry<String, String> entry : allParams.entrySet()) {
-            if (entry.getKey().startsWith("cantidad_") && !entry.getValue().isEmpty()) {
-                try {
-                    int cantidad = Integer.parseInt(entry.getValue());
-                    if (cantidad > 0) {
-                        String productId = entry.getKey().replace("cantidad_", "");
-                        Producto producto = productoService.obtenerProductoPorId(Integer.parseInt(productId));
-                        if (producto != null) {
-                            totalCalculado += cantidad * producto.getPrecio().doubleValue();
-                            productosSeleccionados = true;
-                        }
+            if (venta.getMetodoPago() == null || venta.getMetodoPago().trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Debe seleccionar un método de pago");
+                return "redirect:/ventas/agregar";
+            }
+
+            // Validar productos
+            if (productosSeleccionados.isEmpty()) {
+                redirectAttributes.addFlashAttribute("error", "Debe agregar al menos un producto");
+                return "redirect:/ventas/agregar";
+            }
+
+            // Calcular total
+            BigDecimal total = BigDecimal.ZERO;
+
+            for (Map.Entry<Integer, Producto> entry : productosSeleccionados.entrySet()) {
+                Integer productoId = entry.getKey();
+                Producto producto = entry.getValue();
+                Integer cantidad = cantidades.get(productoId);
+
+                if (cantidad != null && cantidad > 0) {
+                    // Validar stock nuevamente
+                    if (cantidad > producto.getStock()) {
+                        redirectAttributes.addFlashAttribute("error",
+                                "La cantidad para " + producto.getNombre() + " excede el stock disponible (" + producto.getStock() + ")");
+                        return "redirect:/ventas/agregar";
                     }
-                } catch (NumberFormatException e) {
-                    // Ignorar valores no numéricos
+
+                    BigDecimal precio = producto.getPrecio();
+                    BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(cantidad));
+                    total = total.add(subtotal);
                 }
             }
+
+            if (total.compareTo(BigDecimal.ZERO) <= 0) {
+                redirectAttributes.addFlashAttribute("error", "Debe seleccionar al menos un producto con cantidad mayor a 0");
+                return "redirect:/ventas/agregar";
+            }
+
+            // Guardar venta
+            venta.setFechaVenta(LocalDateTime.now());
+            venta.setTotal(total);
+            venta.setStatus("COMPLETADA");
+
+            ventaService.save(venta);
+
+            // IMPORTANTE: Aquí deberías guardar los detalles de venta
+            // Necesitarás un DetalleVentaService
+
+            // Limpiar carrito después de guardar
+            productosSeleccionados.clear();
+            cantidades.clear();
+
+            redirectAttributes.addFlashAttribute("success", "Venta registrada exitosamente");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al registrar la venta: " + e.getMessage());
         }
 
-        // Validar que se hayan seleccionado productos
-        if (!productosSeleccionados) {
-            model.addAttribute("error", "Debe seleccionar al menos un producto");
-            return mostrarFormularioAgregar(busquedaCliente, busquedaProducto, model);
-        }
-
-        // Establecer el total calculado
-        venta.setTotal(java.math.BigDecimal.valueOf(totalCalculado));
-        venta.setStatus("COMPLETADA");
-
-        ventaService.save(venta);
         return "redirect:/ventas/list";
+    }
+
+    @GetMapping("/limpiar-carrito")
+    public String limpiarCarrito(
+            @ModelAttribute("productosSeleccionados") Map<Integer, Producto> productosSeleccionados,
+            @ModelAttribute("cantidades") Map<Integer, Integer> cantidades,
+            RedirectAttributes redirectAttributes) {
+
+        productosSeleccionados.clear();
+        cantidades.clear();
+
+        redirectAttributes.addFlashAttribute("success", "Carrito limpiado");
+        return "redirect:/ventas/agregar";
     }
 
     @GetMapping("/editar/{id}")
@@ -158,14 +221,24 @@ public class VentaController {
     }
 
     @PostMapping("/editar")
-    public String editarVenta(@ModelAttribute Venta venta) {
-        ventaService.update(venta);
+    public String editarVenta(@ModelAttribute Venta venta, RedirectAttributes redirectAttributes) {
+        try {
+            ventaService.update(venta);
+            redirectAttributes.addFlashAttribute("success", "Venta actualizada exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al actualizar la venta");
+        }
         return "redirect:/ventas/list";
     }
 
     @GetMapping("/eliminar/{id}")
-    public String eliminarVenta(@PathVariable Integer id) {
-        ventaService.delete(id);
+    public String eliminarVenta(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        try {
+            ventaService.delete(id);
+            redirectAttributes.addFlashAttribute("success", "Venta anulada exitosamente");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Error al anular la venta");
+        }
         return "redirect:/ventas/list";
     }
 }

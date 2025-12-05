@@ -23,6 +23,19 @@
         </div>
 
         <div class="form-container">
+            <!-- Mostrar mensajes -->
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger">
+                    <i class="bi bi-exclamation-triangle"></i> ${error}
+                </div>
+            </c:if>
+
+            <c:if test="${not empty success}">
+                <div class="alert alert-success">
+                    <i class="bi bi-check-circle"></i> ${success}
+                </div>
+            </c:if>
+
             <form action="${pageContext.request.contextPath}/ventas/editar" method="post" class="venta-form">
                 <input type="hidden" name="idVenta" value="${venta.idVenta}">
 
@@ -87,8 +100,9 @@
                     </select>
                 </div>
 
-                <div class="form-info">
-                    <p><strong>Fecha de Venta:</strong> ${venta.fechaVenta}</p>
+                <div class="form-info bg-light p-3 rounded mb-3">
+                    <p class="mb-1"><strong><i class="bi bi-calendar"></i> Fecha de Venta:</strong> ${venta.fechaVenta}</p>
+                    <p class="mb-0"><strong><i class="bi bi-hash"></i> ID Venta:</strong> ${venta.idVenta}</p>
                 </div>
 
                 <div class="form-actions">
@@ -103,7 +117,6 @@
         </div>
     </div>
 </div>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

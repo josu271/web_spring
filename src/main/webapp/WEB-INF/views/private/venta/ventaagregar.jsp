@@ -8,6 +8,47 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/sidebar.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/venta.css">
+    <style>
+        .productos-multiples {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .producto-seleccion {
+            background-color: white;
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .producto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .producto-info {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        .producto-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .total-container {
+            background-color: #e9ecef;
+            border-radius: 0.375rem;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        .separator {
+            border-top: 2px solid #dee2e6;
+            margin: 25px 0;
+        }
+    </style>
 </head>
 <body>
 
@@ -23,346 +64,253 @@
         </div>
 
         <div class="form-container">
-            <!-- Mostrar errores -->
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger">
-                    <i class="bi bi-exclamation-triangle"></i> ${error}
-                </div>
-            </c:if>
-
-            <!-- Mostrar éxito -->
+            <!-- Mostrar mensajes -->
             <c:if test="${not empty success}">
-                <div class="alert alert-success">
+                <div class="alert alert-success alert-dismissible fade show">
                     <i class="bi bi-check-circle"></i> ${success}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/ventas/agregar" method="post" class="venta-form" id="ventaForm">
-                <!-- CAMPOS OCULTOS PARA PRESERVAR BÚSQUEDAS -->
-                <input type="hidden" name="busquedaCliente" id="hiddenBusquedaCliente" value="${busquedaCliente}">
-                <input type="hidden" name="busquedaProducto" id="hiddenBusquedaProducto" value="${busquedaProducto}">
+            <c:if test="${not empty error}">
+                <div class="alert alert-danger alert-dismissible fade show">
+                    <i class="bi bi-exclamation-triangle"></i> ${error}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            </c:if>
 
-                <!-- Sección Cliente -->
-                <div class="mb-4">
-                    <h4 class="border-bottom pb-2 mb-3">
-                        <i class="bi bi-person me-2"></i>Datos del Cliente
-                    </h4>
+            <!-- SECCIÓN 1: Formulario para agregar productos (FUERA del form principal) -->
+            <div class="mb-4">
+                <h4 class="border-bottom pb-2 mb-3">
+                    <i class="bi bi-plus-circle me-2"></i>Agregar Productos al Carrito
+                </h4>
 
-                    <!-- Búsqueda de Cliente -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label class="form-label">Buscar Cliente</label>
-                            <div class="d-flex gap-2">
-                                <input type="text" class="form-control" id="busquedaClienteInput"
-                                       value="${busquedaCliente}" placeholder="Ingrese nombre o apellido del cliente">
-                                <button type="button" class="btn btn-outline-primary" onclick="buscarCliente()">
-                                    <i class="bi bi-search"></i> Buscar
-                                </button>
-                            </div>
+                <div class="p-3 bg-light rounded">
+                    <form action="${pageContext.request.contextPath}/ventas/agregar-producto" method="post" class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Seleccionar Producto</label>
+                            <select class="form-select" name="productoId" required>
+                                <option value="">Seleccione un producto</option>
+                                <c:forEach var="producto" items="${productos}">
+                                    <c:if test="${producto.stock > 0}">
+                                        <option value="${producto.idProducto}">
+                                            ${producto.nombre} - S/. ${producto.precio} (Stock: ${producto.stock})
+                                        </option>
+                                    </c:if>
+                                </c:forEach>
+                            </select>
                         </div>
                         <div class="col-md-4">
-                            <div class="mt-4">
-                                <a href="${pageContext.request.contextPath}/clientes/list" class="btn btn-outline-primary btn-sm">
-                                    <i class="bi bi-plus-circle"></i> Nuevo Cliente
+                            <label class="form-label">Cantidad</label>
+                            <input type="number" class="form-control" name="cantidad"
+                                   min="1" value="1" required>
+                        </div>
+                        <div class="col-md-2 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-cart-plus"></i> Agregar al Carrito
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <!-- SECCIÓN 2: Productos en el carrito -->
+            <div class="mb-4">
+                <h4 class="border-bottom pb-2 mb-3">
+                    <i class="bi bi-cart-check me-2"></i>Productos en el Carrito
+                </h4>
+
+                <div class="productos-multiples">
+                    <c:choose>
+                        <c:when test="${not empty productosSeleccionados}">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h6 class="mb-0"><i class="bi bi-check-circle"></i> ${productosSeleccionados.size()} producto(s) seleccionado(s)</h6>
+                                <a href="${pageContext.request.contextPath}/ventas/limpiar-carrito"
+                                   class="btn btn-outline-danger btn-sm">
+                                    <i class="bi bi-trash"></i> Vaciar Carrito
                                 </a>
-                                <c:if test="${not empty busquedaCliente}">
-                                    <a href="${pageContext.request.contextPath}/ventas/agregar" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-x-circle"></i> Limpiar
-                                    </a>
-                                </c:if>
                             </div>
+
+                            <c:set var="totalVenta" value="0" />
+
+                            <c:forEach var="entry" items="${productosSeleccionados}">
+                                <c:set var="producto" value="${entry.value}" />
+                                <c:set var="cantidad" value="${cantidades[entry.key]}" />
+                                <c:set var="subtotal" value="${producto.precio * cantidad}" />
+                                <c:set var="totalVenta" value="${totalVenta + subtotal}" />
+
+                                <div class="producto-seleccion">
+                                    <div class="producto-header">
+                                        <h6 class="mb-0">
+                                            <i class="bi bi-box"></i> ${producto.nombre}
+                                        </h6>
+                                        <span class="badge bg-success">S/. ${producto.precio}</span>
+                                    </div>
+
+                                    <div class="producto-info">
+                                        <c:if test="${not empty producto.descripcion}">
+                                            <p class="mb-1">${producto.descripcion}</p>
+                                        </c:if>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-1"><strong>Stock disponible:</strong> ${producto.stock} unidades</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1"><strong>Cantidad:</strong> ${cantidad}</p>
+                                            </div>
+                                        </div>
+                                        <p class="mb-0"><strong>Subtotal:</strong> S/. ${subtotal}</p>
+                                    </div>
+
+                                    <div class="producto-controls">
+                                        <!-- Formulario para remover producto (INDEPENDIENTE) -->
+                                        <form action="${pageContext.request.contextPath}/ventas/remover-producto"
+                                              method="post" style="display: inline;">
+                                            <input type="hidden" name="productoId" value="${producto.idProducto}">
+                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-trash"></i> Quitar del Carrito
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </c:forEach>
+
+                            <!-- Total de la venta -->
+                            <div class="total-container">
+                                <div class="row">
+                                    <div class="col-md-8 text-end">
+                                        <h5 class="mb-0">TOTAL DEL CARRITO:</h5>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h4 class="text-primary mb-0">S/. ${totalVenta}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="text-center text-muted py-4">
+                                <i class="bi bi-cart-x" style="font-size: 3rem;"></i>
+                                <h5 class="mt-3">Carrito vacío</h5>
+                                <p class="mt-2">Agrega productos usando el formulario de arriba</p>
+                            </div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+
+            <div class="separator"></div>
+
+            <!-- SECCIÓN 3: Formulario principal para la venta (SOLO datos de venta) -->
+            <div class="mb-4">
+                <h4 class="border-bottom pb-2 mb-3">
+                    <i class="bi bi-receipt me-2"></i>Datos de la Venta
+                </h4>
+
+                <form action="${pageContext.request.contextPath}/ventas/agregar" method="post" class="venta-form">
+                    <div class="row">
+                        <!-- Cliente -->
+                        <div class="col-md-6 mb-3">
+                            <label for="dniCliente" class="form-label">Cliente *</label>
+                            <select class="form-select" id="dniCliente" name="dniCliente" required>
+                                <option value="">Seleccione un cliente</option>
+                                <c:forEach var="cliente" items="${clientes}">
+                                    <option value="${cliente.dniCliente}">
+                                        ${cliente.nombre} ${cliente.apellido} - DNI: ${cliente.dniCliente}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <div class="form-text">
+                                <a href="${pageContext.request.contextPath}/clientes/list" class="text-decoration-none">
+                                    <i class="bi bi-plus-circle"></i> Crear nuevo cliente
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Empleado -->
+                        <div class="col-md-6 mb-3">
+                            <label for="dniEmpleado" class="form-label">Vendedor *</label>
+                            <select class="form-select" id="dniEmpleado" name="dniEmpleado" required>
+                                <option value="">Seleccione un empleado</option>
+                                <c:forEach var="empleado" items="${empleados}">
+                                    <option value="${empleado.dniEmpleado}">
+                                        ${empleado.nombre} ${empleado.apellido} - ${empleado.cargo}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
                     </div>
 
-                    <!-- Select de Clientes -->
-                    <div class="mb-3">
-                        <label for="dniCliente" class="form-label">Seleccionar Cliente *</label>
-                        <select class="form-select" id="dniCliente" name="dniCliente" required>
-                            <option value="">Seleccione un cliente</option>
-                            <c:choose>
-                                <c:when test="${not empty clientesEncontrados}">
-                                    <c:forEach var="cliente" items="${clientesEncontrados}">
-                                        <option value="${cliente.dniCliente}"
-                                                <c:if test="${venta.dniCliente == cliente.dniCliente}">selected</c:if>>
-                                            ${cliente.nombre} ${cliente.apellido} - DNI: ${cliente.dniCliente}
-                                        </option>
-                                    </c:forEach>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:forEach var="cliente" items="${clientes}">
-                                        <option value="${cliente.dniCliente}"
-                                                <c:if test="${venta.dniCliente == cliente.dniCliente}">selected</c:if>>
-                                            ${cliente.nombre} ${cliente.apellido} - DNI: ${cliente.dniCliente}
-                                        </option>
-                                    </c:forEach>
-                                </c:otherwise>
-                            </c:choose>
-                        </select>
+                    <div class="row">
+                        <!-- Método de Pago -->
+                        <div class="col-md-6 mb-3">
+                            <label for="metodoPago" class="form-label">Método de Pago *</label>
+                            <select class="form-select" id="metodoPago" name="metodoPago" required>
+                                <option value="">Seleccione método</option>
+                                <option value="EFECTIVO">Efectivo</option>
+                                <option value="TARJETA">Tarjeta</option>
+                                <option value="TRANSFERENCIA">Transferencia</option>
+                                <option value="YAPE">Yape</option>
+                                <option value="PLIN">Plin</option>
+                            </select>
+                        </div>
+
+                        <!-- Observaciones (opcional) -->
+                        <div class="col-md-6 mb-3">
+                            <label for="observaciones" class="form-label">Observaciones</label>
+                            <textarea class="form-control" id="observaciones" name="observaciones"
+                                      rows="2" placeholder="Notas adicionales..."></textarea>
+                        </div>
                     </div>
 
-                    <c:if test="${not empty busquedaCliente and empty clientesEncontrados}">
+                    <!-- Resumen del carrito (solo lectura) -->
+                    <c:if test="${not empty productosSeleccionados}">
+                        <div class="mb-3 p-3 bg-light rounded">
+                            <h6 class="mb-2"><i class="bi bi-list-check"></i> Resumen del Pedido</h6>
+                            <div class="small">
+                                <c:forEach var="entry" items="${productosSeleccionados}">
+                                    <c:set var="producto" value="${entry.value}" />
+                                    <c:set var="cantidad" value="${cantidades[entry.key]}" />
+                                    <div class="d-flex justify-content-between">
+                                        <span>${producto.nombre} x${cantidad}</span>
+                                        <span>S/. ${producto.precio * cantidad}</span>
+                                    </div>
+                                </c:forEach>
+                                <hr class="my-1">
+                                <div class="d-flex justify-content-between fw-bold">
+                                    <span>TOTAL:</span>
+                                    <span>S/. ${totalVenta}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </c:if>
+
+                    <!-- Validación de carrito vacío -->
+                    <c:if test="${empty productosSeleccionados}">
                         <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i> No se encontraron clientes con: "${busquedaCliente}"
+                            <i class="bi bi-exclamation-triangle"></i>
+                            No se puede registrar la venta porque el carrito está vacío.
+                            Agrega productos primero.
                         </div>
                     </c:if>
-                </div>
 
-                <!-- Sección Empleado -->
-                <div class="mb-4">
-                    <h4 class="border-bottom pb-2 mb-3">
-                        <i class="bi bi-person-badge me-2"></i>Datos del Vendedor
-                    </h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="dniEmpleado" class="form-label">Empleado *</label>
-                                <select class="form-select" id="dniEmpleado" name="dniEmpleado" required>
-                                    <option value="">Seleccione un empleado</option>
-                                    <c:forEach var="empleado" items="${empleados}">
-                                        <option value="${empleado.dniEmpleado}"
-                                                <c:if test="${venta.dniEmpleado == empleado.dniEmpleado}">selected</c:if>>
-                                            ${empleado.nombre} ${empleado.apellido} - ${empleado.cargo}
-                                        </option>
-                                    </c:forEach>
-                                </select>
-                            </div>
-                        </div>
+                    <div class="form-actions mt-4">
+                        <button type="submit" class="btn btn-success btn-lg"
+                                ${empty productosSeleccionados ? 'disabled' : ''}>
+                            <i class="bi bi-check-circle"></i> Registrar Venta
+                        </button>
+                        <a href="${pageContext.request.contextPath}/ventas/list" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancelar
+                        </a>
                     </div>
-                </div>
-
-                <!-- Sección Productos -->
-                <div class="mb-4">
-                    <h4 class="border-bottom pb-2 mb-3">
-                        <i class="bi bi-box-seam me-2"></i>Productos
-                    </h4>
-
-                    <!-- Búsqueda de Productos -->
-                    <div class="row mb-3">
-                        <div class="col-md-8">
-                            <label class="form-label">Buscar Producto</label>
-                            <div class="d-flex gap-2">
-                                <input type="text" class="form-control" id="busquedaProductoInput"
-                                       value="${busquedaProducto}" placeholder="Ingrese nombre del producto">
-                                <button type="button" class="btn btn-outline-primary" onclick="buscarProducto()">
-                                    <i class="bi bi-search"></i> Buscar
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mt-4">
-                                <c:if test="${not empty busquedaProducto}">
-                                    <a href="${pageContext.request.contextPath}/ventas/agregar" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-x-circle"></i> Limpiar
-                                    </a>
-                                </c:if>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Lista de Productos -->
-                    <c:if test="${not empty busquedaProducto}">
-                        <c:choose>
-                            <c:when test="${not empty productosEncontrados}">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Producto</th>
-                                                <th>Precio</th>
-                                                <th>Stock</th>
-                                                <th>Cantidad</th>
-                                                <th>Subtotal</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <c:forEach var="producto" items="${productosEncontrados}">
-                                                <tr>
-                                                    <td>
-                                                        <strong>${producto.nombre}</strong>
-                                                        <c:if test="${not empty producto.descripcion}">
-                                                            <br><small class="text-muted">${producto.descripcion}</small>
-                                                        </c:if>
-                                                    </td>
-                                                    <td>S/. ${producto.precio}</td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${producto.stock > 0}">
-                                                                <span class="badge bg-success">${producto.stock} unidades</span>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <span class="badge bg-danger">Sin stock</span>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    <td style="width: 120px;">
-                                                        <input type="number" name="cantidad_${producto.idProducto}"
-                                                               class="form-control form-control-sm cantidad-input"
-                                                               placeholder="0" min="0" max="${producto.stock}"
-                                                               value="0" data-precio="${producto.precio}"
-                                                               data-producto-id="${producto.idProducto}">
-                                                    </td>
-                                                    <td class="subtotal" id="subtotal_${producto.idProducto}">S/. 0.00</td>
-                                                </tr>
-                                            </c:forEach>
-                                        </tbody>
-                                        <tfoot>
-                                            <tr class="table-primary">
-                                                <td colspan="4" class="text-end"><strong>TOTAL:</strong></td>
-                                                <td><strong id="total-venta">S/. 0.00</strong></td>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <div class="alert alert-warning">
-                                    <i class="bi bi-exclamation-triangle"></i> No se encontraron productos con: "${busquedaProducto}"
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:if>
-
-                    <!-- Mensaje cuando no hay búsqueda de productos -->
-                    <c:if test="${empty busquedaProducto}">
-                        <div class="alert alert-info">
-                            <i class="bi bi-info-circle"></i> Use la búsqueda para encontrar productos y agregarlos a la venta.
-                        </div>
-                    </c:if>
-                </div>
-
-                <!-- Sección Pago -->
-                <div class="mb-4">
-                    <h4 class="border-bottom pb-2 mb-3">
-                        <i class="bi bi-credit-card me-2"></i>Información de Pago
-                    </h4>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="metodoPago" class="form-label">Método de Pago *</label>
-                                <select class="form-select" id="metodoPago" name="metodoPago" required>
-                                    <option value="">Seleccione método</option>
-                                    <option value="EFECTIVO" <c:if test="${venta.metodoPago == 'EFECTIVO'}">selected</c:if>>Efectivo</option>
-                                    <option value="TARJETA" <c:if test="${venta.metodoPago == 'TARJETA'}">selected</c:if>>Tarjeta</option>
-                                    <option value="TRANSFERENCIA" <c:if test="${venta.metodoPago == 'TRANSFERENCIA'}">selected</c:if>>Transferencia</option>
-                                    <option value="YAPE" <c:if test="${venta.metodoPago == 'YAPE'}">selected</c:if>>Yape</option>
-                                    <option value="PLIN" <c:if test="${venta.metodoPago == 'PLIN'}">selected</c:if>>Plin</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-actions">
-                    <button type="submit" class="btn btn-success btn-lg" id="btnRegistrar">
-                        <i class="bi bi-check-circle"></i> Registrar Venta
-                    </button>
-                    <a href="${pageContext.request.contextPath}/ventas/list" class="btn btn-secondary">
-                        <i class="bi bi-x-circle"></i> Cancelar
-                    </a>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
+<!-- Bootstrap JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-// Función para buscar cliente
-function buscarCliente() {
-    const busqueda = document.getElementById('busquedaClienteInput').value;
-    const busquedaProducto = '${busquedaProducto}';
-
-    let url = '${pageContext.request.contextPath}/ventas/agregar?busquedaCliente=' + encodeURIComponent(busqueda);
-    if (busquedaProducto) {
-        url += '&busquedaProducto=' + encodeURIComponent(busquedaProducto);
-    }
-
-    window.location.href = url;
-}
-
-// Función para buscar producto
-function buscarProducto() {
-    const busqueda = document.getElementById('busquedaProductoInput').value;
-    const busquedaCliente = '${busquedaCliente}';
-
-    let url = '${pageContext.request.contextPath}/ventas/agregar?busquedaProducto=' + encodeURIComponent(busqueda);
-    if (busquedaCliente) {
-        url += '&busquedaCliente=' + encodeURIComponent(busquedaCliente);
-    }
-
-    window.location.href = url;
-}
-
-// Calcular total automáticamente
-document.addEventListener('DOMContentLoaded', function() {
-    const cantidadInputs = document.querySelectorAll('.cantidad-input');
-
-    function calcularTotal() {
-        let total = 0;
-
-        cantidadInputs.forEach(input => {
-            const cantidad = parseInt(input.value) || 0;
-            const precio = parseFloat(input.dataset.precio);
-            const productoId = input.dataset.productoId;
-            const subtotal = cantidad * precio;
-
-            // Actualizar subtotal en la fila
-            const subtotalCell = document.getElementById('subtotal_' + productoId);
-            if (subtotalCell) {
-                subtotalCell.textContent = 'S/. ' + subtotal.toFixed(2);
-            }
-
-            total += subtotal;
-        });
-
-        // Actualizar total general
-        document.getElementById('total-venta').textContent = 'S/. ' + total.toFixed(2);
-    }
-
-    // Validar formulario antes de enviar
-    document.getElementById('ventaForm').addEventListener('submit', function(e) {
-        const cliente = document.getElementById('dniCliente').value;
-        const empleado = document.getElementById('dniEmpleado').value;
-        const metodoPago = document.getElementById('metodoPago').value;
-
-        if (!cliente || !empleado || !metodoPago) {
-            e.preventDefault();
-            alert('Por favor, complete todos los campos obligatorios.');
-            return;
-        }
-
-        // Verificar que haya al menos un producto seleccionado
-        let productosConCantidad = 0;
-        cantidadInputs.forEach(input => {
-            if (parseInt(input.value) > 0) {
-                productosConCantidad++;
-            }
-        });
-
-        if (productosConCantidad === 0) {
-            e.preventDefault();
-            alert('Debe seleccionar al menos un producto con cantidad mayor a 0.');
-            return;
-        }
-
-        // Mostrar confirmación
-        if (!confirm('¿Está seguro de registrar esta venta?')) {
-            e.preventDefault();
-        }
-    });
-
-    // Agregar event listeners
-    cantidadInputs.forEach(input => {
-        input.addEventListener('input', calcularTotal);
-        input.addEventListener('change', function() {
-            if (this.value < 0) this.value = 0;
-            if (this.value > parseInt(this.max)) this.value = this.max;
-        });
-    });
-
-    // Calcular inicialmente
-    calcularTotal();
-});
-</script>
 </body>
 </html>
