@@ -33,14 +33,28 @@
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="dniCliente" class="form-label">DNI del Cliente</label>
-                            <input type="number" class="form-control" id="dniCliente" name="dniCliente"
-                                   value="${citaTecnica.dniCliente}" required>
+                            <label for="dniCliente" class="form-label">Cliente</label>
+                            <select class="form-select" id="dniCliente" name="dniCliente" required>
+                                <option value="">Seleccione un cliente</option>
+                                <c:forEach var="cliente" items="${clientesActivos}">
+                                    <option value="${cliente.dniCliente}"
+                                            ${citaTecnica.dniCliente == cliente.dniCliente ? 'selected' : ''}>
+                                        ${cliente.nombre} ${cliente.apellido} (${cliente.dniCliente})
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="dniEmpleado" class="form-label">DNI del Técnico</label>
-                            <input type="number" class="form-control" id="dniEmpleado" name="dniEmpleado"
-                                   value="${citaTecnica.dniEmpleado}" required>
+                            <label for="dniEmpleado" class="form-label">Técnico Asignado</label>
+                            <select class="form-select" id="dniEmpleado" name="dniEmpleado" required>
+                                <option value="">Seleccione un técnico</option>
+                                <c:forEach var="tecnico" items="${tecnicosActivos}">
+                                    <option value="${tecnico.dniEmpleado}"
+                                            ${citaTecnica.dniEmpleado == tecnico.dniEmpleado ? 'selected' : ''}>
+                                        ${tecnico.nombre} ${tecnico.apellido} - ${tecnico.cargo}
+                                    </option>
+                                </c:forEach>
+                            </select>
                         </div>
                     </div>
 
@@ -68,19 +82,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Estado Actual</label>
-                        <div>
-                            <span class="badge
-                                <c:choose>
-                                    <c:when test="${citaTecnica.estado == 'Pendiente'}">bg-warning</c:when>
-                                    <c:when test="${citaTecnica.estado == 'En proceso'}">bg-info</c:when>
-                                    <c:when test="${citaTecnica.estado == 'Completado'}">bg-success</c:when>
-                                    <c:otherwise>bg-secondary</c:otherwise>
-                                </c:choose> fs-6">
-                                ${citaTecnica.estado}
-                            </span>
-                        </div>
-                        <div class="form-text">Para cambiar el estado, use la lista principal de citas</div>
+                        <label for="estado" class="form-label">Estado de la Cita</label>
+                        <select class="form-select" id="estado" name="estado" required>
+                            <option value="Pendiente" ${citaTecnica.estado == 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                            <option value="En proceso" ${citaTecnica.estado == 'En proceso' ? 'selected' : ''}>En proceso</option>
+                            <option value="Completado" ${citaTecnica.estado == 'Completado' ? 'selected' : ''}>Completado</option>
+                            <option value="Cancelado" ${citaTecnica.estado == 'Cancelado' ? 'selected' : ''}>Cancelado</option>
+                        </select>
                     </div>
 
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">

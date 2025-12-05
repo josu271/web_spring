@@ -1,9 +1,11 @@
 package com.example.Techmerch.citatecnica;
+
 import com.example.Techmerch.model.CitaTecnica;
+import com.example.Techmerch.model.Cliente;
+import com.example.Techmerch.model.Empleado;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -83,5 +85,44 @@ public class CitaTecnicaRepository implements CitaTecnicaDAO {
     public void softDeleteCita(int id) {
         String query = "UPDATE Cita_Tecnica SET Status = 'INACTIVO' WHERE ID_CitaTecnica = ?";
         jdbcTemplate.update(query, id);
+    }
+
+    // Nuevos métodos para obtener clientes y técnicos activos
+    public List<Cliente> obtenerClientesActivos() {
+        String query = "SELECT * FROM Cliente WHERE Status = 'ACTIVO' ORDER BY Nombre, Apellido";
+        return jdbcTemplate.query(query, new RowMapper<Cliente>() {
+            @Override
+            public Cliente mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Cliente(
+                        rs.getInt("DNI_Cliente"),
+                        rs.getString("Nombre"),
+                        rs.getString("Apellido"),
+                        rs.getString("Direccion"),
+                        rs.getString("Correo"),
+                        rs.getString("Celular"),
+                        rs.getString("Status")
+                );
+            }
+        });
+    }
+
+    public List<Empleado> obtenerTecnicosActivos() {
+        String query = "SELECT * FROM Empleado WHERE Status = 'ACTIVO' AND Cargo LIKE '%Técnico%' ORDER BY Nombre, Apellido";
+        return jdbcTemplate.query(query, new RowMapper<Empleado>() {
+            @Override
+            public Empleado mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new Empleado(
+                        rs.getInt("DNI_Empleado"),
+                        rs.getString("Nombre"),
+                        rs.getString("Apellido"),
+                        rs.getString("Direccion"),
+                        rs.getString("Correo"),
+                        rs.getString("Celular"),
+                        rs.getString("Cargo"),
+                        rs.getString("Contra"),
+                        rs.getString("Status")
+                );
+            }
+        });
     }
 }

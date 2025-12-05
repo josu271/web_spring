@@ -1,4 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,14 +31,28 @@
                 <form method="post" action="${pageContext.request.contextPath}/citastecnica/agregar">
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="dniCliente" class="form-label">DNI del Cliente</label>
-                            <input type="number" class="form-control" id="dniCliente" name="dniCliente" required>
-                            <div class="form-text">Ingrese el número de documento del cliente</div>
+                            <label for="dniCliente" class="form-label">Cliente</label>
+                            <select class="form-select" id="dniCliente" name="dniCliente" required>
+                                <option value="">Seleccione un cliente</option>
+                                <c:forEach var="cliente" items="${clientesActivos}">
+                                    <option value="${cliente.dniCliente}">
+                                        ${cliente.nombre} ${cliente.apellido} (${cliente.dniCliente})
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <div class="form-text">Seleccione el cliente para la cita</div>
                         </div>
                         <div class="col-md-6">
-                            <label for="dniEmpleado" class="form-label">DNI del Técnico</label>
-                            <input type="number" class="form-control" id="dniEmpleado" name="dniEmpleado" required>
-                            <div class="form-text">Ingrese el número de documento del técnico asignado</div>
+                            <label for="dniEmpleado" class="form-label">Técnico Asignado</label>
+                            <select class="form-select" id="dniEmpleado" name="dniEmpleado" required>
+                                <option value="">Seleccione un técnico</option>
+                                <c:forEach var="tecnico" items="${tecnicosActivos}">
+                                    <option value="${tecnico.dniEmpleado}">
+                                        ${tecnico.nombre} ${tecnico.apellido} - ${tecnico.cargo}
+                                    </option>
+                                </c:forEach>
+                            </select>
+                            <div class="form-text">Seleccione el técnico que atenderá la cita</div>
                         </div>
                     </div>
 

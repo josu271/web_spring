@@ -67,15 +67,6 @@
                                                    class="btn btn-outline-primary" title="Editar cita">
                                                     <i class="bi bi-pencil"></i>
                                                 </a>
-                                                <form action="${pageContext.request.contextPath}/citastecnica/cambiar-estado"
-                                                      method="post" class="d-inline">
-                                                    <input type="hidden" name="id" value="${cita.idCitaTecnica}">
-                                                    <select name="estado" onchange="this.form.submit()" class="form-select form-select-sm">
-                                                        <option value="Pendiente" ${cita.estado == 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                                                        <option value="En proceso" ${cita.estado == 'En proceso' ? 'selected' : ''}>En proceso</option>
-                                                        <option value="Completado" ${cita.estado == 'Completado' ? 'selected' : ''}>Completado</option>
-                                                    </select>
-                                                </form>
                                                 <form action="${pageContext.request.contextPath}/citastecnica/eliminar/${cita.idCitaTecnica}"
                                                       method="post" class="d-inline">
                                                     <button type="submit" class="btn btn-outline-danger"

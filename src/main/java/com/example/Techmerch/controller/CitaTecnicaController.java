@@ -34,6 +34,8 @@ public class CitaTecnicaController {
     @GetMapping("/agregar")
     public String mostrarFormularioAgregar(Model model) {
         model.addAttribute("citaTecnica", new CitaTecnica());
+        model.addAttribute("clientesActivos", citaTecnicaService.obtenerClientesActivos());
+        model.addAttribute("tecnicosActivos", citaTecnicaService.obtenerTecnicosActivos());
         return "private/citas_tecnica/citastecnicaagregar";
     }
 
@@ -48,8 +50,13 @@ public class CitaTecnicaController {
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
         CitaTecnica citaTecnica = citaTecnicaService.obtenerCitaTecnicaPorId(id);
-        model.addAttribute("citaTecnica", citaTecnica);
-        return "private/citas_tecnica/citastecnicaeditar";
+        if (citaTecnica != null) {
+            model.addAttribute("citaTecnica", citaTecnica);
+            model.addAttribute("clientesActivos", citaTecnicaService.obtenerClientesActivos());
+            model.addAttribute("tecnicosActivos", citaTecnicaService.obtenerTecnicosActivos());
+            return "private/citas_tecnica/citastecnicaeditar";
+        }
+        return "redirect:/citastecnica/list";
     }
 
     @PostMapping("/editar")

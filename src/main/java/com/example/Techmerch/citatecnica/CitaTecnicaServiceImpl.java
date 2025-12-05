@@ -1,7 +1,8 @@
 package com.example.Techmerch.citatecnica;
+
 import com.example.Techmerch.model.CitaTecnica;
-
-
+import com.example.Techmerch.model.Cliente;
+import com.example.Techmerch.model.Empleado;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -43,5 +44,15 @@ public class CitaTecnicaServiceImpl implements CitaTecnicaService {
     @Override
     public void eliminarCitaTecnica(int id) {
         citaTecnicaDAO.softDeleteCita(id);
+    }
+
+    @Override
+    public List<Cliente> obtenerClientesActivos() {
+        return citaTecnicaDAO.obtenerClientesActivos();
+    }
+
+    @Override
+    public List<Empleado> obtenerTecnicosActivos() {
+        return citaTecnicaDAO.obtenerTecnicosActivos();
     }
 }
